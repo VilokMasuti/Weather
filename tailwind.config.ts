@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
@@ -17,6 +18,7 @@ const config: Config = {
       animation: {
         spotlight: "spotlight 3s ease .75s 1 forwards",
         "meteor-effect": "meteor 5s linear infinite",
+        aurora: "aurora 60s linear infinite",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -24,6 +26,7 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       keyframes: {
+
         
         spotlight: {
           "0%": {
@@ -47,7 +50,7 @@ const config: Config = {
         
       },
     },
-    plugins: [addVariablesForColors],
+    plugins: [addVariablesForColors,],
   },
   plugins: [],
 };
@@ -63,4 +66,8 @@ function addVariablesForColors({ addBase, theme }: any) {
     ":root": newVars,
   });
 }
+
+
+
+
 export default config;
