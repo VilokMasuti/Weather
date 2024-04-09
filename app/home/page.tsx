@@ -83,7 +83,7 @@ const HomePage = () => {
   const firstData = data?.list[0]; // Assuming you want to access the first item in the list
 
   return (
-    <main className=" ">
+    <main className="  max-h-screen">
       <div className="h-[50rem] w-full rounded-md bg-neutral-950 relative  antialiased">
         <Navbar />
         {/* <BackgroundBeams /> */}
@@ -146,12 +146,12 @@ const HomePage = () => {
               </Container>
             </div>
             <div className=" flex gap-6">
-              <div className=" ml-[60px] mt-3">
+              <div className=" ml-[60px] mt-3 max-sm:flex max-sm:flex-col  max-sm:ml-[50px]">
                 <p className=" capitalize  text-center text-3xl bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-900">
                   {firstData?.weather[0].description}
                 </p>
 <div 
-                className=" ml-[480px]">
+                className=" ml-[480px] max-sm:ml-[90px]">
 <WeatherIcon
                   iconName={getDayOrNightIcon(
                     firstData?.weather[0].icon ?? "",
@@ -162,7 +162,7 @@ const HomePage = () => {
                 
             <div>
   {data?.city && (
-    <div className="capitalize flex flex-row gap-3  text-center text-xl bg-clip-text font-semibold text-transparent bg-gradient-to-b from-neutral-100 to-neutral-700">
+    <div className="capitalize flex flex-row gap-3  max-sm:flex max-sm:flex-col text-center text-xl bg-clip-text font-semibold text-transparent bg-gradient-to-b from-neutral-100 to-neutral-700">
            
       <p>City:{data.city.name}</p>|
       <p>Population: {data.city.population}</p>|
