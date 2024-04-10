@@ -31,7 +31,7 @@ const Searchbox = (props: Props) => {
       alt=''
       width={50}
       height={50}
-      className="  cursor-pointer max-sm:hidden  "
+      className="  cursor-pointer  "
       />
 </button>
 

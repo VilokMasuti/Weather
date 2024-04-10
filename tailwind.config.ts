@@ -16,7 +16,7 @@ const config: Config = {
   theme: {
     extend: {
       animation: {
-        spotlight: "spotlight 3s ease .75s 1 forwards",
+        spotlight: "spotlight 6s ease .95s 1 forwards",
         "meteor-effect": "meteor 5s linear infinite",
         aurora: "aurora 60s linear infinite",
       },

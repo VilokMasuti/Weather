@@ -1,3 +1,4 @@
+
 /** @format */
 
 
@@ -31,7 +32,7 @@ export default function ForecastWeatherDetail(
   return (
     
      
-        <><div className=" flex flex-row gap-[200px] p-10 items-center ml-[240px] ">
+        <><div className=" flex flex-row gap-[200px] p-10 items-center ml-[10px]  max-sm:ml-[30px] max-sm:gap-[60px] ">
               <WeatherIcon iconName={weatehrIcon} />
               <p className="bg-clip-text font-semibold text-transparent bg-gradient-to-b from-neutral-100 to-neutral-900 text-sm"> DATE :{date}</p>
              

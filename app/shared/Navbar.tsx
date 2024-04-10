@@ -5,6 +5,8 @@ import Searchbox from './Searchbox';
 import axios from 'axios';
 import { useAtom } from "jotai";
 import { placeAtom } from '../atom';
+import { loadingCityAtom } from "@/app/atom";
+
 type Props = { location?: string;
 
  };
@@ -12,6 +14,7 @@ const API_KEY = process.env.NEXT_PUBLIC_WEATHER_KEY;
 
 
 const Navbar = ({location}:Props) => {
+  const [_, setLoadingCity] = useAtom(loadingCityAtom);
   const [city, setCity] = useState("")
   const [error, setError] = useState("");
   //
@@ -57,16 +60,19 @@ else{
 }}
 function handleCurrentLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude, longitude } = position.coords;
+    navigator.geolocation.getCurrentPosition(async (postiion) => {
+      const { latitude, longitude } = postiion.coords;
       try {
+        setLoadingCity(true);
         const response = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
         );
-        const cityName = response.data.name; // Extract city name from response
-        setCity(cityName); // Update city state with current location
+        setTimeout(() => {
+          setLoadingCity(false);
+          setPlace(response.data.name);
+        }, 500);
       } catch (error) {
-        console.log("Error fetching weather data for current location");
+        setLoadingCity(false);
       }
     });
   }
@@ -112,11 +118,16 @@ function handleCurrentLocation() {
           </div>
         </section>
       </div>
-    </nav><section className="flex   max-w-7xl px-3 ">
-        <div className="relative ">
+    </nav>
+    <section className="flex lg:hidden  max-sm:mt-4  max-w-7xl px-3 ">
+        <div className="relative  ">
           {/* SearchBox */}
 
-        
+          <Searchbox
+              value={city}
+              onSubmit={handleSubmiSearch}
+              onChange={(e) => handleInputChnage(e.target.value)} />
+  
           <SuggetionBox
              showSuggestions={showSuggestions} // Ensure to pass showSuggestions prop
              suggestions={suggestions}
