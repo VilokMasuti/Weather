@@ -1,25 +1,30 @@
-"use client"
 
 import Image from 'next/image';
+import { cn } from "@/utils/cn";
+import React from "react";
 
-import { ChangeEventHandler, FormEventHandler } from 'react';
 type Props = {
-      type:string
-   onChange?: ChangeEventHandler<HTMLInputElement> | undefined
-onSubmit?: FormEventHandler<HTMLFormElement> | undefined
+      className?: string;
+      value: string;
+      onChange: React.ChangeEventHandler<HTMLInputElement> | undefined;
+      onSubmit: React.FormEventHandler<HTMLFormElement> | undefined;
 
 }
 
 const Searchbox = (props: Props) => {
   return (
-    <form onSubmit={props.onSubmit} className=' flex relative items-center justify-center h-10'>
-      <input
-      type='text'
-      value={props.type}
-      placeholder='Location'
-      className= '   text-gradient-to-b from-neutral-50 to-neutral-950  max-sm:hidden  bg-transparent border-b-2 outline-none  '
-onChange={() => {props.onChange}}
-      />
+    <form 
+    onSubmit={props.onSubmit} className={cn(
+      "flex relative items-center justify-center h-10",
+      props.className
+    )}
+  ><input
+  type='text'
+  value={props.value}
+  onChange={props.onChange} // Correctly pass the onChange function
+  placeholder='Location..'
+  className= 'text-gradient-to-b from-neutral-50 text-white to-neutral-950 bg-transparent border-b-2 outline-none'
+/>
 <button type='submit' className=' cursor-pointer ml-[-10px]'>
 <Image
       src='/assests/s.svg'

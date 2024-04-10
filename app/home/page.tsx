@@ -6,10 +6,14 @@ import { fromUnixTime, format, parseISO } from "date-fns";
 import axios from "axios";
 import { Container } from "../shared/Container";
 import { convertKelvinToCelsius } from "@/utils/convertKelvinToCelsius";
-
+import { useAtom } from "jotai";
+import { useEffect } from "react";
 import WeatherIcon from "../shared/WeatherIcon";
 import { getDayOrNightIcon } from "@/utils/getDayOrNightIcon";
 import { BackgroundBeams } from "../../components/ui/background-beams";
+import ForecastWeatherDetail from "../shared/ForecastWeatherDetail";
+import { placeAtom } from "../atom";
+import {Loading}from "../shared/Loading";
 interface WeatherDetail {
   dt: number;
   main: {
@@ -64,30 +68,55 @@ interface WeatherData {
     sunset: number;
   };
 }
+
+
 const HomePage = () => {
+  const [place, setPlace] = useAtom(placeAtom);
   // Assuming QueryKey is defined elsewhere in your code
 
   // Assuming QueryKey is defined elsewhere in your code
 
-  const { isLoading, error, data } = useQuery<WeatherData>({
+  const { isLoading, error, data ,refetch} = useQuery<WeatherData>({
     queryKey: ["repoData"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=hubli&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&cnt=56`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}&cnt=56`
       );
       return data;
     },
   });
+  useEffect(() => {
+    refetch();
+  }, [place, refetch]);
+// unqiue data for 7 daya
+const uniqueDates =[
+  ...new Set(
+    data?.list.map(
+      (entry) => new Date(entry.dt * 1000).toISOString().split("T")[0]
+    )
+  )
+];
 
-  if (isLoading) return "Loading";
+  // Filtering data to get the first entry after 6 AM for each unique date
+  const firstDataForEachDate = uniqueDates.map((date) => {
+    return data?.list.find((entry) => {
+      const entryDate = new Date(entry.dt * 1000).toISOString().split("T")[0];
+      const entryTime = new Date(entry.dt * 1000).getHours();
+      return entryDate === date && entryTime >= 6;
+    });
+  });
+
+  if (isLoading) return  <Loading/>;
   const firstData = data?.list[0]; // Assuming you want to access the first item in the list
 
   return (
     <main className="  max-h-screen">
-      <div className="h-[50rem] w-full rounded-md bg-neutral-950 relative  antialiased">
-        <Navbar />
+      <div className="h-[100rem] w-full rounded-m relative  antialiased">
+        <Navbar location={data?.city.name}/>
         {/* <BackgroundBeams /> */}
         <main className=" px-3 max-w-7xl mx-auto flex flex-col gap-9 w-full pb-10 p-4">
+        <BackgroundBeams />
+
           {/* Todays Data */}
           <section>
             <div>
@@ -176,6 +205,24 @@ const HomePage = () => {
               </div>
             </div>
           </section>
+          {/* 7days ////////////////*/}
+          <section className="flex flex-wrap justify-center gap-4 bg-transparent">
+          <BackgroundBeams />
+  {firstDataForEachDate.map((d, i) => (
+    <ForecastWeatherDetail
+      key={i}
+      description={d?.weather[0].description ?? ""}
+      weatehrIcon={d?.weather[0].icon ?? "01d"}
+      date={d ? format(parseISO(d.dt_txt), "dd.MM") : ""}
+      day={d ? format(parseISO(d.dt_txt), "EEEE") : ""}
+      feels_like={d?.main.feels_like ?? 0}
+      temp={d?.main.temp ?? 0}
+      temp_max={d?.main.temp_max ?? 0}
+      temp_min={d?.main.temp_min ?? 0}
+    />
+  ))}
+</section>
+
         </main>
       </div>
       <BackgroundBeams />
